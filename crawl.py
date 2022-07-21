@@ -3,6 +3,7 @@ import argparse
 import librosa
 import soundfile as sf
 import re
+import numpy
 from pytube import YouTube, Playlist
 import pytube
 import torch
@@ -53,6 +54,7 @@ def resample_wav():
         try:
             y, sr = torchaudio.load(i)       
             y_16k = F.resample(y, sr, 16000)
+            y_16k = y_16k.numpy()
             y_mono = librosa.to_mono(y_16k)
             sf.write(i, y_mono, 16000)
         except:
