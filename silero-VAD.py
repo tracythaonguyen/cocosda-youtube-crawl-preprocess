@@ -50,7 +50,9 @@ def vad():
                 speech_timestamps_mini.clear()
                 sum = 0
                 break   
-
+        
+        if not os.path.exists(args.save_dir):
+            os.mkdir(args.save_dir)
         if not os.path.exists(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0].replace(" ", "_")):
             os.mkdir(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_"))                  
         for i in mini_audio:

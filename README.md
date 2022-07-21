@@ -19,7 +19,7 @@ python crawl.py --url_playlist=<URL to YouTube playlist> --save_dir=<Directory f
 
 First we split the audio files into smaller files using Silero Voice Activity Detection (VAD):
 ```
-python silero-VAD.py --folder_file_wav=<Path to WAV folder> --savedir=<Directory folder to save new WAV>
+python silero-VAD.py --folder_file_wav=<Path to WAV folder> --save_dir=<Directory folder to save new WAV>
 ```
 After performing VAD, compute the cosine similarity of audio pairs:
 ```

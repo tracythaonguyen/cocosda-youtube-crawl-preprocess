@@ -20,13 +20,15 @@ parser.add_argument('--save_dir', type=str)
 
 args = parser.parse_args()
 
+# video index to continue crawling, index = 0 means the first video
+START_INDEX = 0
 
 def download_video():
     playlist = pytube.Playlist(args.url_playlist)
     print('Number of videos in playlist: %s' % len(playlist.video_urls))
     number = 0
     video = playlist.video_urls
-    for i in range(200, len(video)):
+    for i in range(0, len(video)):
         number = number + 1
         if number == 2:
             break
@@ -79,9 +81,9 @@ def remove():
     for file2 in fileMp3:
         os.remove(file2)
 
-#download_video()
-#convert_mp4()
-#convert_mp3()
+download_video()
+convert_mp4()
+convert_mp3()
 resample_wav()
 get_resample()
-#remove()
+remove()
