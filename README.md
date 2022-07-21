@@ -1,9 +1,9 @@
 # Cocosda_data
 
-Download file .mp4 from youtube and convert file .mp4 to file .wav, we run code:
+Download file .mp4 from youtube and convert file .mp4 to file .wav, we run code: </br>
 python3 crawl.py --url_playlist=url_playlist_youtube --save_dir=directory_save_file
 
-VAD file wav run code:
+VAD file wav run code: </br>
 python silero-VAD.py --folder_file_wav=folder_contain_file_wav --savedir=directory_save_file
 
 After VAD, we run like this to cosine pair wav: </br>
