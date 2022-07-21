@@ -29,7 +29,7 @@ parser.add_argument('-b', '--wav_dir', type=str,
 parser.add_argument('-f', '--file_csv', type=str,
                         help='file_csv')
 args = parser.parse_args()
-print("Load wav from" + str(args.wav_dir))
+print("Load wav from " + str(args.wav_dir))
 
 try:
   x = glob.glob(str(args.wav_dir + "/*.wav"))

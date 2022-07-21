@@ -23,7 +23,7 @@ python silero-VAD.py --folder_file_wav=<Path to WAV folder> --save_dir=<Director
 ```
 After performing VAD, compute the cosine similarity of audio pairs:
 ```
-python cosine_pair.py --wav_dir=<Path to WAV folder> --file_csv=<CSV to save results>
+python cosine_pair.py --wav_dir=<Path to VAD WAV folder> --file_csv=<CSV to save results>
 ```
 After getting the similarity scores, irrelevant / noisy audio files have to be removed. For each language, we have to listen to some audio files to define a threshold.
 All audio files having the threshold value below the pre-defined threshold will be removed: 
