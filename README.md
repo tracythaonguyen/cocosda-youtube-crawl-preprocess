@@ -1,13 +1,34 @@
-# Cocosda_data
+# YouTube data pipeline for crawling and pre-processing
 
-Download file .mp4 from youtube and convert file .mp4 to file .wav, we run code: </br>
-python3 crawl.py --url_playlist=url_playlist_youtube --save_dir=directory_save_file
+## Dependency
 
-VAD file wav run code: </br>
-python silero-VAD.py --folder_file_wav=folder_contain_file_wav --savedir=directory_save_file
+Requirements:
+```
+pip install -r /path/to/requirements.txt
+```
 
-After VAD, we run like this to cosine pair wav: </br>
-python3 cosine_pair.py --wav_dir=dir_to_foler_wav --file_csv=file_csv_save_min_cosine_and_path_of_wav</br>
-So, after cosine_pair.py, we have csv file save all min cosine and path of wav after VAD </br>
-We listen random some wavs and choose thresh hold min cosine to remove all wav file smaller than thresh hold </br>
-Use: python3 --remove.py --file_csv=file_csv_save_min_cosine_and_path_of_wav --threshold=thresh_hold_we_choose
+## Data Crawling
+
+Crawl MP4 video from Youtube and convert to WAV:
+```
+python crawl.py --url_playlist=<URL to YouTube playlist> --save_dir=<Directory folder to save WAV>
+```
+
+## Data Pre-processing
+
+First we split the audio files into smaller files using Silero Voice Activity Detection (VAD):
+```
+python silero-VAD.py --folder_file_wav=<Path to WAV folder> --savedir=<Directory folder to save new WAV>
+```
+<br>
+After performing VAD, compute the cosine similarity of audio pairs:
+```
+python cosine_pair.py --wav_dir=<Path to WAV folder> --file_csv=<CSV to save results>
+```
+<br>
+After getting the similarity scores, irrelevant / noisy audio files have to be removed. For each language, we have to listen to some audio files to define a threshold.
+<br>
+All audio files having the threshold value below the pre-defined threshold will be removed: 
+```
+python --remove.py --file_csv=<CSV path> --threshold=<Threshold value from 0.2 to 0.5>
+```
