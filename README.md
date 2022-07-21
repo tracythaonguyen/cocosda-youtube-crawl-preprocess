@@ -1,4 +1,6 @@
-# Cocosda_data
+# cocosda-youtube-crawl-preprocess
+
+pip install -r requirements.txt </br>
 
 Download file .mp4 from youtube and convert file .mp4 to file .wav, we run code: </br>
 python3 crawl.py --url_playlist=url_playlist_youtube --save_dir=directory_save_file
