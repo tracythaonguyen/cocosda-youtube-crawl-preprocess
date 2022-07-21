@@ -28,8 +28,8 @@ def download_video():
     video = playlist.video_urls
     for i in range(200, len(video)):
         number = number + 1
-        if number == 2:
-            break
+        #if number == 2:
+        #    break
         yt = YouTube(video[i])
         yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         if not os.path.exists(args.save_dir):
@@ -79,9 +79,9 @@ def remove():
     for file2 in fileMp3:
         os.remove(file2)
 
-#download_video()
-#convert_mp4()
-#convert_mp3()
+download_video()
+convert_mp4()
+convert_mp3()
 resample_wav()
 get_resample()
-#remove()
+remove()
