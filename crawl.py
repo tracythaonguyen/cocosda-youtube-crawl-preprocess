@@ -32,11 +32,12 @@ def download_video():
         number = number + 1
         #if number == 2:
         #    break
+        id = re.match('^[^v]+v=(.{11}).*', video[i])
         yt = YouTube(video[i])
         yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         if not os.path.exists(args.save_dir):
             os.makedirs(args.save_dir)
-        yt.download(args.save_dir)
+        yt.download(args.save_dir, filename=id.group(1) + '.mp4')
         print(number)
 
 def convert_mp4():
