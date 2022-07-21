@@ -57,9 +57,9 @@ def vad():
             save_audio(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_") + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
             j = j + 1 
 
-def re_vad():
-    j = 30000
+def re_vad():   
     for name in glob.glob(args.save_dir + '/*' ):
+        j = 30000
         for name3 in glob.glob(name + '/*'):
             file1 = librosa.get_duration(filename = name3)
             if file1 >= 10.0:
@@ -94,8 +94,8 @@ def re_vad():
                         continue   
                             
                 for i in mini_audio:
-                    save_audio(name + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
-                    j = j + 1 
+                    save_audio(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_") + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
+                    j = j + 1  
 
 def remove():
     for i in glob.glob(args.save_dir + '/*' ):
