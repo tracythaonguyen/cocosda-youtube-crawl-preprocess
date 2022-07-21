@@ -30,8 +30,8 @@ def download_video():
     video = playlist.video_urls
     for i in range(0, len(video)):
         number = number + 1
-        if number == 2:
-            break
+        #if number == 2:
+        #    break
         yt = YouTube(video[i])
         yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         if not os.path.exists(args.save_dir):
