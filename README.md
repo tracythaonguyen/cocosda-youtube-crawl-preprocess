@@ -1,5 +1,8 @@
-# YouTube data pipeline for crawling and pre-processing
 
+# YouTube data pipeline for crawling and pre-processing
+```
+pip install -r requirements.txt </br>
+```
 ## Dependency
 
 Requirements:
