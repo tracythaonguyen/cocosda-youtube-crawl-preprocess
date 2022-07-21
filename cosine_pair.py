@@ -30,11 +30,10 @@ parser.add_argument('-f', '--file_csv', type=str,
                         help='file_csv')
 args = parser.parse_args()
 print("Load wav from " + str(args.wav_dir))
+list_folder = str(args.wav_dir) + "/*/"
+print(list_folder)
+list_folder = glob.glob(list_folder)
 
-try:
-  x = glob.glob(str(args.wav_dir + "/*.wav"))
-except:
-  print("No dir name" + str(args.wav_dir))
 classifier = EncoderClassifier.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb")
 
 #define cospair function
@@ -45,40 +44,41 @@ def cos_pair(a,b):
 #min_mat save min cosine pair of 1 wav; min_path save path of wav
 min_mat = []
 min_path = []
-for _ in range(len(x)):
-  frequency, signal = wavfile.read(x[_])
-  slice_length = 1.2 # in seconds
-  overlap = 0.2 # in seconds
-  slices = np.arange(0, len(signal)/frequency, slice_length-overlap, dtype=np.int)
-  i = 0
-  audio = []
-  matrix_audio = []
-  for start, end in zip(slices[:-1], slices[1:]):
-      i = i + 1
-      start_audio = start * frequency
-      end_audio = (end + overlap)* frequency
-      audio_slice = signal[int(start_audio): int(end_audio)]
-      audio_slice = audio_slice.reshape(1,-1)
-      audio_slice = torch.tensor(audio_slice)
-      #Encode a audio_slice
-      audio_slice = classifier.encode_batch(audio_slice)
-      audio_slice = audio_slice.squeeze()
-      audio.append(audio_slice)
-  #matrix cosine of a audio
-  matrix_audio = [ [0]*(len(audio)) for i in range(len(audio))]
-  for i in range(len(audio)):
-    for j in range(len(audio)):
-      matrix_audio[i][j]=(cos_pair(audio[i], audio[j]))
-  mymin = min([min(r) for r in matrix_audio])
-  #append mincosine and path
-  min_mat.append(mymin)
-  min_path.append(x[_])
-  if (_%100==0):
-    print(str(_))
-    print("____________________________________________________________________________________")
-    # print(matrix_audio)
-    print(str(x[_]))
-    print("Min matrix:" + str(mymin))
+for le in range(len(list_folder)):
+    x = glob.glob(str(list_folder[le]) +  '*.wav')
+    
+    for _ in range(len(x)):
+        frequency, signal = wavfile.read(x[_])
+        slice_length = 1.2 # in seconds
+        overlap = 0.2 # in seconds
+        slices = np.arange(0, len(signal)/frequency, slice_length-overlap, dtype=np.int)
+        i = 0
+        audio = []
+        matrix_audio = []
+        for start, end in zip(slices[:-1], slices[1:]):
+            i = i + 1
+            start_audio = start * frequency
+            end_audio = (end + overlap)* frequency
+            audio_slice = signal[int(start_audio): int(end_audio)]
+            audio_slice = audio_slice.reshape(1,-1)
+            audio_slice = torch.tensor(audio_slice)
+            audio_slice = classifier.encode_batch(audio_slice)
+            audio_slice = audio_slice.squeeze()
+            audio.append(audio_slice)
+        try:
+            matrix_audio = [ [0]*(len(audio)) for i in range(len(audio))]
+            for i in range(len(audio)):
+                for j in range(len(audio)):
+                    matrix_audio[i][j]=(cos_pair(audio[i], audio[j]))
+                    # print(matrix_audio)
+            mymin = min([min(r) for r in matrix_audio])
+            min_mat.append(mymin)
+            min_path.append(x[_])
+        except:
+            print(x[_]) 
+            os.remove(x[_])
+    print(le)
+
 
 #   import numpy as np
 #   import matplotlib.pyplot as plt
