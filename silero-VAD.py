@@ -8,6 +8,7 @@ import glob
 import os
 import librosa
 import argparse
+import csv
  
 model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
                               model='silero_vad',
@@ -16,14 +17,21 @@ model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--folder_file_wav', type=str)
+parser.add_argument('--path_folder_file_wav', type=str)
 parser.add_argument('--save_dir', type=str)
+parser.add_argument('--path_file_csv', type=str)
 
 args = parser.parse_args()
 
 def vad():
-    for name in glob.glob(args.folder_file_wav + "/*"):
+    with open(args.path_file_csv, 'w', encoding = 'UTF8', newline='') as f:
+    writer = csv.writer(f)
+
+    writer.writerow('path', 'timestamps')
+
+    for name in glob.glob(args.path_folder_file_wav + '/*.wav'):
         j = 0
+        h = 0
         wav = read_audio(name, sampling_rate = SAMPLING_RATE)
         speech_timestamps = get_speech_timestamps(wav, model, threshold=0.5, sampling_rate=SAMPLING_RATE)
 
@@ -39,77 +47,41 @@ def vad():
             if k < len(speech_timestamps)-1:
                 k = k + 1
                 if sum >= 48000:      
-                    mini_audio.append(collect_chunks(speech_timestamps_mini, wav))
+                    mini_audio.append(collect_chunks(speech_timestamps_mini, wav))       
+                    timestamps = ', '.join(str(item) for item in speech_timestamps_mini)
+                    writer.writerow(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0] + '/' + str(h), timestamps)
                     speech_timestamps_mini.clear()
                     sum = 0
+                    h = h + 1
                     continue
                 else:
                     continue
             else:
                 mini_audio.append(collect_chunks(speech_timestamps_mini, wav))
+                timestamps = ', '.join(str(item) for item in speech_timestamps_mini)
+                print(timestamps)
+                writer.writerow(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0] + '/' + str(h), timestamps)
                 speech_timestamps_mini.clear()
                 sum = 0
-                break   
-        
-        if not os.path.exists(args.save_dir):
-            os.mkdir(args.save_dir)
-        if not os.path.exists(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0].replace(" ", "_")):
-            os.mkdir(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_"))                  
+                break
+
+        if not os.path.exists(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0]):
+            os.mkdir(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0])              
         for i in mini_audio:
-            save_audio(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_") + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
-            j = j + 1 
+           save_audio(args.save_dir + '/' + os.path.splitext(os.path.basename(name))[0] + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
+           j = j + 1 
 
-def re_vad():   
-    for name in glob.glob(args.save_dir + '/*' ):
-        j = 30000
-        for name3 in glob.glob(name + '/*'):
-            file1 = librosa.get_duration(filename = name3)
-            if file1 >= 10.0:
-                wav = read_audio(name3, sampling_rate = SAMPLING_RATE)
-                speech_timestamps1 = get_speech_timestamps(wav, model, threshold=0.9, sampling_rate=SAMPLING_RATE)
-                sum = 0
-                k = 0   
-                speech_timestamps_mini = []
-                mini_audio = []
-
-                if len(speech_timestamps1) != 0:
-                    while(True):
-                        sum =  sum + speech_timestamps1[k]['end'] - speech_timestamps1[k]['start']
-                        
-                        speech_timestamps_mini.append(speech_timestamps1[k])
-                        
-                        if k < len(speech_timestamps1)-1:
-                            k = k + 1
-                            if sum >= 48000:      
-                                mini_audio.append(collect_chunks(speech_timestamps_mini, wav))
-                                speech_timestamps_mini.clear()
-                                sum = 0
-                                continue
-                            else:
-                                continue
-                        else:
-                            mini_audio.append(collect_chunks(speech_timestamps_mini, wav))
-                            speech_timestamps_mini.clear()
-                            sum = 0
-                            break
-                    else:
-                        continue   
-                            
-                for i in mini_audio:
-                    save_audio(args.save_dir + '/'  + os.path.splitext(os.path.basename(name))[0].replace(" ", "_") + '/' + str(j) + '.wav', i, sampling_rate = SAMPLING_RATE)
-                    j = j + 1  
-
-def remove():
+           
+def remove_and_rename():
     for i in glob.glob(args.save_dir + '/*' ):
         k = 0
         for j in glob.glob(i + '/*'):
-            if librosa.get_duration(filename = j) < 3 or librosa.get_duration(filename = j) > 10:
+            if librosa.get_duration(filename = j) < 3 or librosa.get_duration(filename = j) > 15:
                 os.remove(j)
             else:
                 os.rename(j, i + '/audio_' + str(k) + '.wav')
                 k= k+1
 
 vad()
-re_vad()
-remove()
+remove_and_rename()
         
