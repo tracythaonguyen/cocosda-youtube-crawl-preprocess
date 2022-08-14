@@ -34,7 +34,7 @@ list_folder = str(args.wav_dir) + "/*/"
 print(list_folder)
 list_folder = glob.glob(list_folder)
 
-classifier = EncoderClassifier.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb")
+classifier = EncoderClassifier.from_hparams(run_opts={"device":'cuda'}, source="speechbrain/spkrec-ecapa-voxceleb", savedir="pretrained_models/spkrec-ecapa-voxceleb")
 
 #define cospair function
 
@@ -61,9 +61,9 @@ for le in range(len(list_folder)):
             end_audio = (end + overlap)* frequency
             audio_slice = signal[int(start_audio): int(end_audio)]
             audio_slice = audio_slice.reshape(1,-1)
-            audio_slice = torch.tensor(audio_slice)
+            audio_slice = torch.tensor(audio_slice).to('cuda')
             audio_slice = classifier.encode_batch(audio_slice)
-            audio_slice = audio_slice.squeeze()
+            audio_slice = audio_slice.detach().cpu().squeeze()
             audio.append(audio_slice)
         try:
             matrix_audio = [ [0]*(len(audio)) for i in range(len(audio))]
@@ -78,28 +78,6 @@ for le in range(len(list_folder)):
             print(x[_]) 
             os.remove(x[_])
     print(le)
-
-
-#   import numpy as np
-#   import matplotlib.pyplot as plt
-
-
-#   fig = plt.figure(figsize=(6, 3.2))
-
-#   ax = fig.add_subplot(111)
-#   ax.set_title('color')
-#   plt.imshow(matrix_audio)
-#   ax.set_aspect('equal')
-
-#   cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
-#   cax.get_xaxis().set_visible(False)
-#   cax.get_yaxis().set_visible(False)
-#   cax.patch.set_alpha(0)
-#   cax.set_frame_on(False)
-#   plt.colorbar(orientation='vertical')
-#   plt.show()
-
-
 
 data = []
 for i in range(len(min_mat)):
