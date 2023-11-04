@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cc1eb29-a3d4-4623-a0a5-34b5a4d5b2ca" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/silero-VAD.py" beforeDir="false" afterPath="$PROJECT_DIR$/silero-VAD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
