@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cc1eb29-a3d4-4623-a0a5-34b5a4d5b2ca" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/cocosda-youtube-crawl-preprocess.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cocosda-youtube-crawl-preprocess.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crawl.py" beforeDir="false" afterPath="$PROJECT_DIR$/crawl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/remove.py" beforeDir="false" afterPath="$PROJECT_DIR$/remove.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/silero-VAD.py" beforeDir="false" afterPath="$PROJECT_DIR$/silero-VAD.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +32,7 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="crawl" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="remove" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="cocosda-youtube-crawl-preprocess" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -50,8 +54,8 @@
           <ENTRY IS_ENABLED="true" PARSER="runconfig" />
         </ENTRIES>
       </EXTENSION>
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/crawl.py" />
-      <option name="PARAMETERS" value="--url_playlist https://www.youtube.com/playlist?list=PLs2EK8-H7PubxoO1yX6j30my6W9_Rhvfm --save_dir $PROJECT_DIR$/output" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/remove.py" />
+      <option name="PARAMETERS" value="--file_csv $PROJECT_DIR$/VAD_pair.csv --thresh_hold 0.3 --output_file $PROJECT_DIR$/VAD_pair_filter.csv" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
