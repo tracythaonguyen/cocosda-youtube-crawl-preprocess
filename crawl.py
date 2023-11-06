@@ -30,10 +30,14 @@ def download_video():
     print('Number of videos in playlist: %s' % len(playlist.video_urls))
     number = 0
     video = playlist.video_urls
+    video_limit = 200
     for i in range(0, len(video)):
         number = number + 1
         # if number == 2:
         #    break
+        if number > video_limit:
+            print(f"Downloaded {video_limit} videos. Stopping...")
+            break
         id = re.match('^[^v]+v=(.{11}).*', video[i])
         try:
             yt = YouTube(video[i])
