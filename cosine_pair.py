@@ -51,7 +51,7 @@ for le in range(len(list_folder)):
         frequency, signal = wavfile.read(x[_])
         slice_length = 1.2 # in seconds
         overlap = 0.2 # in seconds
-        slices = np.arange(0, len(signal)/frequency, slice_length-overlap, dtype=np.int)
+        slices = np.arange(0, len(signal)/frequency, slice_length-overlap, dtype=int)
         i = 0
         audio = []
         matrix_audio = []
