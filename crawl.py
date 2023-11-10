@@ -13,6 +13,7 @@ from moviepy.editor import *
 import glob
 from pydub import AudioSegment
 from pytube.exceptions import AgeRestrictedError
+from http.client import IncompleteRead
 
 parser = argparse.ArgumentParser()
 # download setting
@@ -44,8 +45,22 @@ def download_video():
             yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
             if not os.path.exists(args.save_dir):
                 os.makedirs(args.save_dir)
-            yt.download(args.save_dir, filename=id.group(1) + '.mp4')
-            print(number)
+
+            # Retry the download
+            for attempt in range(3):
+                try:
+                    yt.download(args.save_dir, filename=id.group(1) + '.mp4')
+                    print(number)
+                    break  # Successful download, break out of the retry loop
+                except AgeRestrictedError:
+                    print(f"Video {video[i]} is age restricted. Skipping...")
+                    break  # Skip age-restricted video
+                except IncompleteRead:
+                    # Oh well, reconnect and keep trucking
+                    continue
+                except Exception as e:
+                    print(f"Error during download attempt {attempt + 1}: {e}")
+
         except AgeRestrictedError:
             print(f"Video {video[i]} is age restricted. Skipping...")
             continue
