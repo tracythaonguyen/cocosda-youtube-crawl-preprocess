@@ -40,7 +40,7 @@ def vad():
             speech_timestamps_mini = []
             mini_audio = []
 
-            while(True):
+            while k < len(speech_timestamps):
                 sum =  sum + speech_timestamps[k]['end'] - speech_timestamps[k]['start'] 
                 speech_timestamps_mini.append(speech_timestamps[k])
 
